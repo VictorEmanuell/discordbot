@@ -39,8 +39,6 @@ client.on('message', async message => {
                         .then((res) => {
                             response = res.data
                             status = res.status
-
-                            console.log(response)
                         })
                         .catch((error) => {
                             if (error.response) {
