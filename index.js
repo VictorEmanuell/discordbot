@@ -5,7 +5,10 @@ require('dotenv').config();
 
 const config = {
     prefix: process.env.DS_PREFIX,
-    token: process.env.DS_TOKEN
+    token: process.env.DS_TOKEN,
+    message: process.env.MESSAGE_ID,
+    channel: process.env.CHANNEL_ID,
+    dev_id: process.env.DEV_ID
 }
 
 client.login(config.token);
@@ -78,4 +81,18 @@ client.on('message', async message => {
                 })
         })
     }
-})
+});
+
+client.on('message', async message => {
+    if (message.content === "!clear" && message.channel.id === config.channel) {
+        (await message.delete())
+        if (message.member.hasPermission('MANAGE_MESSAGES') || message.author.id === config.dev_id) {
+            message.channel.messages.fetch({ limit: 100 }).then(messages => {
+                messages.delete(config.message)
+                message.channel.bulkDelete(messages, true)
+            })
+        } else {
+            (await message.reply('Você não tem permissão para limpar o chat :(')).delete({timeout: 5000})
+        }
+    }
+});
