@@ -15,7 +15,7 @@ client.login(config.token);
 
 client.on("ready", () => {
     console.log('Online!');
-    client.user.setActivity('twitch.tv/velloso', { url: 'https://www.twitch.tv/velloso', type: 'STREAMING' });
+    client.user.setActivity('booyah.live/velloso', { url: 'https://booyah.live/velloso', type: 'STREAMING' });
 });
 
 client.on('message', async message => {
@@ -84,7 +84,11 @@ client.on('message', async message => {
 });
 
 client.on('message', async message => {
-    if (message.content === "!clear" && message.channel.id === config.channel) {
+    if(message.content === '!clear' && message.channel.id != config.channel){
+        (await message.delete())
+    }
+
+    if (message.content === '!clear' && message.channel.id === config.channel) {
         (await message.delete())
         if (message.member.hasPermission('MANAGE_MESSAGES') || message.author.id === config.dev_id) {
             message.channel.messages.fetch({ limit: 100 }).then(messages => {
